@@ -3,7 +3,7 @@
  */
 public class MemeTester {
     public static void main(String[] args) {
-        Meme myMeme = new Meme("Test", "C:\\Users\\Aaron\\Desktop\\memeGenerator\\src\\image.jpg");
-        myMeme.saveAsFile("test");
+        Meme myMeme = new Meme("test test test test test test test test test test ", "spongebob.jpg");
+        myMeme.saveAsFile("test3");
     }
 }
