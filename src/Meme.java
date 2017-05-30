@@ -16,15 +16,26 @@ public class Meme {
     private int TEXT_WIDTH = 60;
 
     Meme(String text, BufferedImage image) {
+        TEXT_WIDTH = 30 * (1 + (text.length() / 50)); // lol you thought this was a final field
         this.text = text;
-        canvas = new BufferedImage(image.getWidth() + BORDER_WIDTH, image.getHeight() + BORDER_WIDTH + TEXT_WIDTH, BufferedImage.TYPE_INT_RGB);
-        for (int x = 0; x < image.getWidth(); x++) {
-            for (int y = 0; y < image.getHeight(); y++) {
-                canvas.setRGB(x, y, Color.white.getRGB());
+        try {
+            image = getScaledImage(image,500,300);
+            canvas = new BufferedImage(image.getWidth() + BORDER_WIDTH, image.getHeight() + BORDER_WIDTH + TEXT_WIDTH, BufferedImage.TYPE_INT_RGB);
+            for (int x = 0; x < canvas.getWidth(); x++) {
+                for (int y = 0; y < canvas.getHeight(); y++) {
+                    canvas.setRGB(x, y, Color.white.getRGB());
+                }
             }
+
+            Graphics g = canvas.getGraphics();
+            g.drawImage(image, 4, TEXT_WIDTH, null);
+            g.setColor(Color.black);
+            g.setFont(new Font("Calibri", Font.PLAIN, 20));
+
+            drawString(g, text, 4, g.getFontMetrics().getHeight() + 2, image.getWidth());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Graphics g = canvas.getGraphics();
-        g.drawImage(image, 4, TEXT_WIDTH, null);
     }
 
     Meme(String text, String path) {
@@ -98,6 +109,17 @@ public class Meme {
         }
     }
 
+    public void saveAsFile(File f) {
+        try {
+            File output = f;
+            System.out.println("file obj created!");
+            ImageIO.write(canvas, "jpg", output);
+            System.out.println("outputted!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static BufferedImage getScaledImage(BufferedImage image, int width, int height) throws IOException {
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
@@ -110,5 +132,9 @@ public class Meme {
         return bilinearScaleOp.filter(
                 image,
                 new BufferedImage(width, height, image.getType()));
+    }
+
+    public BufferedImage getMeme(){
+        return canvas;
     }
 }
